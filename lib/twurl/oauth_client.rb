@@ -96,12 +96,14 @@ module Twurl
           multipart_body << "Content-Transfer-Encoding: base64\r\n" if options.upload['base64']
           multipart_body << "\r\n"
 
+          file = File.open(filename, "rb")
           if options.upload['base64']
-            enc = Base64.encode64(File.read(filename))
+            enc = Base64.encode64(file.read())
             multipart_body << enc
           else
-            multipart_body << File.read(filename)
+            multipart_body << file.read()
           end
+          file.close
         }
 
         multipart_body << "\r\n--#{boundary}--\r\n"
